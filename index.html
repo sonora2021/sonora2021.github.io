@@ -222,7 +222,34 @@
 		</div>
 		<div id="output-container"><div id="output-scroll"></div></div>
 	</div>
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch-jsonp/1.0.6/fetch-jsonp.min.js"></script>
+	<script type="text/javascript">
+		const fetchJSONP = (unique => url => 
+			new Promise(rs => {
+				// INIT
+				let script = document.createElement('script')
+				let name = "_jsonp_" + unique++
+				
+				if (url.match(/\?/)) url += "&callback="+name
+				else url += "?callback="+name
+				
+				script.src = url
+				window[name] = json => {
+				rs(new Response(JSON.stringify(json)))
+				script.remove()
+				delete window[name]
+				}
+				
+				document.body.appendChild(script)
+			})
+			)(0);
+		fetchJSONP(
+			'https://sonora2021.github.io',
+			function(data) {
+			console.log(data);
+			}
+		);
+	</script>
 	<script type="text/javascript" src="index.js"></script>
 	<script type="text/javascript">//<![CDATA[
 
